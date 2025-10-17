@@ -8,8 +8,7 @@ const Plan = sequelize.define('Plan', {
   currency: { type: DataTypes.STRING, defaultValue: 'USD' },
   interval: { type: DataTypes.ENUM('day','month','year'), allowNull: false },
   features: { type: DataTypes.JSON },
-  trial_days: { type: DataTypes.INTEGER, defaultValue: 0 },
-  stripePriceId: { type: DataTypes.STRING } // optional: store Stripe Price ID
+  trial_days: { type: DataTypes.INTEGER, defaultValue: 0 }
 }, { tableName: 'plans' });
 
 module.exports = Plan;

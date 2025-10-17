@@ -8,7 +8,6 @@ const Subscription = sequelize.define('Subscription', {
   currentPeriodStart: { type: DataTypes.DATE },
   currentPeriodEnd: { type: DataTypes.DATE },
   trialEnd: { type: DataTypes.DATE },
-  stripeSubscriptionId: { type: DataTypes.STRING },
   canceledAt: { type: DataTypes.DATE },
   amountPaidCents: { type: DataTypes.INTEGER, defaultValue: 0 }
 }, { tableName: 'subscriptions' });

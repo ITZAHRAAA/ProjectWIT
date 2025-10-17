@@ -1,35 +1,31 @@
 // routes/payment.js
 const express = require("express");
 const router = express.Router();
-const Stripe = require("stripe");
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-router.post("/create-checkout-session", async (req, res) => {
-  const { planType } = req.body;
-  const prices = {
-    monthly: 10000, // cents -> $100.00
-    yearly: 100000 // cents -> $1000.00
-  };
-
-  if (!planType || !prices[planType]) return res.status(400).json({ error: "Invalid planType" });
-
+// Simple payment tracking without external payment processor
+router.post("/create-payment", async (req, res) => {
   try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items: [{
-        price_data: {
-          currency: "usd",
-          product_data: { name: `Subscription Plan: ${planType}` },
-          unit_amount: prices[planType]
-        },
-        quantity: 1
-      }],
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cancel",
-    });
+    const { planType, amount, description } = req.body;
+    
+    if (!planType || !amount) {
+      return res.status(400).json({ error: "planType and amount are required" });
+    }
 
-    res.json({ url: session.url });
+    // Create a simple payment record (you can implement your own payment logic here)
+    const paymentData = {
+      planType,
+      amount,
+      description: description || `Payment for ${planType} plan`,
+      status: 'pending',
+      createdAt: new Date()
+    };
+
+    // For now, just return success - implement your own payment logic
+    res.json({ 
+      message: "Payment created successfully",
+      paymentId: `payment_${Date.now()}`,
+      data: paymentData
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
